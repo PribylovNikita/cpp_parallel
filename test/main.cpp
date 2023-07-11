@@ -1,28 +1,18 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include "device_read.hpp"
 #include "EventQueue.hpp"
 
 const auto kTimeout = std::chrono::seconds(5);
-const auto kHelpString = "usage: multithreading OR multithreading <test_type> <limit>\n"
+const auto kHelpString = "usage: cpp_parallel OR cpp_parallel <test_type> <limit>\n"
                          "<test_type>:\n"
                          "\t1 to limit the number of responses of device A,\n"
                          "\t2 to limit the number of responses of device B,\n"
                          "\t3 to limit the number of responses of both devices A amd B.\n"
                          "<limit>:\n"
                          "\tThe number of times a device will respond.\n\tIf 0, no limit is applied.\n"
-                         "e.g.: multithreading 1 10 (device A will respond 10 times, device B will not stop responding).\n";
-
-
-void readA(std::shared_ptr<DeviceA>& deviceA, EventQueue& eventQueue) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    eventQueue.push(std::make_shared<DataEvent>(deviceA));
-}
-
-void readB(std::shared_ptr<DeviceB>& deviceB, EventQueue& eventQueue) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-    eventQueue.push(std::make_shared<DataEvent>(deviceB));
-}
+                         "e.g.: cpp_parallel 1 10 (device A will respond 10 times, device B will not stop responding).\n";
 
 
 void readFromDeviceA(EventQueue& eventQueue, std::atomic<bool>& stopFlag, int limit) {
@@ -34,7 +24,7 @@ void readFromDeviceA(EventQueue& eventQueue, std::atomic<bool>& stopFlag, int li
             std::cerr << device->getName() << " stopped responding\n";
             break;
         }
-        readA(device, eventQueue);
+        eventQueue.push(readA(device));
     }
     eventQueue.push(std::make_shared<WorkDoneEvent>(device));
 }
@@ -48,7 +38,7 @@ void readFromDeviceB(EventQueue& eventQueue, std::atomic<bool>& stopFlag, int li
             std::cerr << device->getName() << " stopped responding\n";
             break;
         }
-        readB(device, eventQueue);
+        eventQueue.push(readB(device));
     }
     eventQueue.push(std::make_shared<WorkDoneEvent>(device));
 }
