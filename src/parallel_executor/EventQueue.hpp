@@ -9,6 +9,7 @@
 #include <condition_variable>
 #include "event.hpp"
 
+
 class EventQueue{
 public:
     void push(const std::shared_ptr<const Event>& event) {

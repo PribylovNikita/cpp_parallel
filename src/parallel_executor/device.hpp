@@ -6,6 +6,7 @@
 #include <sstream>
 #include <random>
 
+
 class Device {
 public:
     Device() = default;
@@ -21,7 +22,7 @@ public:
     };
 
     std::string generateData() {
-        const std::string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        static const std::string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         const int max_length = 500;
 
         generator.seed(random_device());

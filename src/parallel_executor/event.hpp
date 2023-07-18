@@ -6,8 +6,6 @@
 #include <utility>
 #include "device.hpp"
 
-const std::string kWorkDoneString = "Work Done";
-const std::string kStartedString = "Started";
 
 class Event{
 public:
@@ -48,7 +46,7 @@ public:
     explicit WorkDoneEvent(std::shared_ptr<Device> device): DeviceEvent(std::move(device)) {}
 
     std::string toString() const override {
-        return DeviceEvent::deviceName() + ": " + kWorkDoneString;
+        return DeviceEvent::deviceName() + ": Work Done";
     }
 };
 
@@ -58,7 +56,7 @@ public:
     explicit StartedEvent(std::shared_ptr<Device> device): DeviceEvent(std::move(device)) {}
 
     std::string toString() const override {
-        return DeviceEvent::deviceName() + ": " + kStartedString;
+        return DeviceEvent::deviceName() + ": Started";
     }
 };
 
